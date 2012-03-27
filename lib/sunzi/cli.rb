@@ -99,6 +99,10 @@ module Sunzi
         # Load sunzi.yml
         @config = YAML.load(File.read('sunzi.yml'))
 
+        # Erase local 'compiled' folder
+        erase_local_folder = @config['preferences'] && @config['preferences']['erase_local_folder']
+        FileUtils.rm_rf "compiled" if erase_local_folder
+
         # Break down attributes into individual files
         (@config['attributes'] || []).each {|key, value| create_file "compiled/attributes/#{key}", value }
 
