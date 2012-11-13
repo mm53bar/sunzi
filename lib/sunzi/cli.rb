@@ -122,10 +122,13 @@ module Sunzi
         Dir['templates/*'].each       {|file| template File.expand_path(file), "compiled/files/#{File.basename(file)}", @config['attributes'] }
 
         # Build install.sh
+        create_file 'compiled/install.sh', File.binread("install.sh")
         if role
-          create_file 'compiled/install.sh', File.binread("install.sh") << "\n" << File.binread("roles/#{role}.sh")
+          append_to_file 'compiled/install.sh', File.binread("roles/#{role}.sh")
         else
-          copy_file File.expand_path('install.sh'), 'compiled/install.sh'
+          Dir['roles/*'].each do |file|
+            append_to_file 'compiled/install.sh', "source roles/#{File.basename(file)}.sh\n"
+          end
         end
       end
 
