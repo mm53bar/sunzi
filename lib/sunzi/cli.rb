@@ -124,7 +124,7 @@ module Sunzi
         # Build install.sh
         create_file 'compiled/install.sh', File.binread("install.sh")
         if role
-          append_to_file 'compiled/install.sh', File.binread("roles/#{role}.sh")
+          append_to_file 'compiled/install.sh', "source roles/#{role}.sh\n"
         else
           Dir['roles/*'].each do |file|
             append_to_file 'compiled/install.sh', "source roles/#{File.basename(file)}.sh\n"
