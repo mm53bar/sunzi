@@ -55,7 +55,7 @@ module Sunzi
         endpoint = "#{user}@#{host}"
 
         # compile attributes and recipes
-        do_compile(role)
+        do_compile(role, user, host, port)
 
         # The host key might change when we instantiate a new VM, so
         # we remove (-R) the old host key from known_hosts.
@@ -90,7 +90,7 @@ module Sunzi
         end
       end
 
-      def do_compile(role)
+      def do_compile(role, user = nil, host = nil, port = nil)
         # Check if you're in the sunzi directory
         abort_with "You must be in the sunzi folder" unless File.exists?('sunzi.yml')
         # Check if role exists
@@ -106,6 +106,11 @@ module Sunzi
         # Break down attributes into individual files
         (@config['attributes'] || []).each {|key, value| create_file "compiled/attributes/#{key}", value }
 
+        # Add deploy attributes
+        create_file("compiled/attributes/hostuser", user) if user
+        create_file("compiled/attributes/hostname", host) if host
+        create_file("compiled/attributes/hostport", port) if port
+        
         # Retrieve remote recipes via HTTP
         cache_remote_recipes = @config['preferences'] && @config['preferences']['cache_remote_recipes']
         (@config['recipes'] || []).each do |key, value|
