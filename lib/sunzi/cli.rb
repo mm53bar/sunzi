@@ -103,13 +103,13 @@ module Sunzi
         erase_local_folder = @config['preferences'] && @config['preferences']['erase_local_folder']
         FileUtils.rm_rf "compiled" if erase_local_folder
 
-        # Break down attributes into individual files
-        (@config['attributes'] || []).each {|key, value| create_file "compiled/attributes/#{key}", value }
-
         # Add deploy attributes
-        create_file("compiled/attributes/hostuser", user) if user
-        create_file("compiled/attributes/hostname", host) if host
-        create_file("compiled/attributes/hostport", port) if port
+        @config['attributes'].merge!('hostuser' => user) if user
+        @config['attributes'].merge!('hostname' => host) if host
+        @config['attributes'].merge!('hostport' => port) if port
+        
+        # Break down attributes into individual files
+        (@config['attributes'] || []).each {|key, value| create_file "compiled/attributes/#{key}", value, :force => true }
         
         # Retrieve remote recipes via HTTP
         cache_remote_recipes = @config['preferences'] && @config['preferences']['cache_remote_recipes']
@@ -119,20 +119,20 @@ module Sunzi
         end
 
         # Copy local files
-        Dir['recipes/*'].each         {|file| copy_file File.expand_path(file), "compiled/recipes/#{File.basename(file)}" }
-        Dir['roles/*'].each           {|file| copy_file File.expand_path(file), "compiled/roles/#{File.basename(file)}" }
-        (@config['files'] || []).each {|file| copy_file File.expand_path(file), "compiled/files/#{File.basename(file)}" }
+        Dir['recipes/*'].each         {|file| copy_file File.expand_path(file), "compiled/recipes/#{File.basename(file)}", :force => true }
+        Dir['roles/*'].each           {|file| copy_file File.expand_path(file), "compiled/roles/#{File.basename(file)}", :force => true }
+        (@config['files'] || []).each {|file| copy_file File.expand_path(file), "compiled/files/#{File.basename(file)}", :force => true }
 
         # Copy local templates
-        Dir['templates/*'].each       {|file| template File.expand_path(file), "compiled/files/#{File.basename(file)}", @config['attributes'] }
+        Dir['templates/*'].each       {|file| template File.expand_path(file), "compiled/files/#{File.basename(file)}", @config['attributes'], :force => true }
 
         # Build install.sh
-        create_file 'compiled/install.sh', File.binread("install.sh")
+        create_file 'compiled/install.sh', File.binread("install.sh"), :force => true
         if role
           append_to_file 'compiled/install.sh', "source roles/#{role}.sh\n"
         else
           Dir['roles/*'].each do |file|
-            append_to_file 'compiled/install.sh', "source roles/#{File.basename(file)}.sh\n"
+            append_to_file 'compiled/install.sh', "source roles/#{File.basename(file)}\n"
           end
         end
       end
