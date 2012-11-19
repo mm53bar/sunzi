@@ -124,7 +124,7 @@ module Sunzi
         (@config['files'] || []).each {|file| copy_file File.expand_path(file), "compiled/files/#{File.basename(file)}", :force => true }
 
         # Copy local templates
-        Dir['templates/*'].each       {|file| template File.expand_path(file), "compiled/files/#{File.basename(file)}", @config['attributes'], :force => true }
+        Dir['templates/*'].each       {|file| template File.expand_path(file), "compiled/files/#{File.basename(file)}", @config['attributes'] }
 
         # Build install.sh
         create_file 'compiled/install.sh', File.binread("install.sh"), :force => true
