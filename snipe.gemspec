@@ -1,17 +1,17 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "sunzi/version"
+require "snipe/version"
 
 Gem::Specification.new do |s|
-  s.name        = "sunzi"
-  s.version     = Sunzi::VERSION
-  s.authors     = ["Kenn Ejima"]
-  s.email       = ["kenn.ejima@gmail.com"]
-  s.homepage    = "http://github.com/kenn/sunzi"
-  s.summary     = %q{Server provisioning utility for minimalists}
-  s.description = %q{Server provisioning utility for minimalists}
+  s.name        = "snipe"
+  s.version     = Snipe::VERSION
+  s.authors     = ["Mike McClenaghan"]
+  s.email       = ["mike@sideline.ca"]
+  s.homepage    = "http://github.com/mm53bar/snipe"
+  s.summary     = %q{Building boxes with no crap}
+  s.description = %q{Building boxes with no crap}
 
-  s.rubyforge_project = "sunzi"
+  s.rubyforge_project = "snipe"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
