@@ -1,4 +1,4 @@
-module Sunzi
+module Snipe
   module Logger
     class << self
       def info(text)

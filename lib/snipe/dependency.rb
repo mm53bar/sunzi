@@ -1,4 +1,4 @@
-module Sunzi
+module Snipe
   class Dependency
     def self.all
       {
